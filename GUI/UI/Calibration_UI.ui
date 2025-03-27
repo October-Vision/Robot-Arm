@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Calibration</class>
+ <widget class="QMainWindow" name="Calibration">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1033</width>
+    <height>619</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1033</width>
+    <height>619</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1033</width>
+    <height>619</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>相机标定</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">border-width: 1px;border-style: solid;background-color: rgb(51,53,66); border-style: outset;border-radius:6px; </string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QFrame" name="frame">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(69,71,85)</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="8,2">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="7,3">
+         <item>
+          <widget class="QFrame" name="frame_4">
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <property name="spacing">
+               <number>20</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label_2">
+                <property name="minimumSize">
+                 <size>
+                  <width>320</width>
+                  <height>240</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>320</width>
+                  <height>240</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">border-width: 1px;border-style: solid;background-color: rgb(221,221,221)</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label">
+                <property name="minimumSize">
+                 <size>
+                  <width>320</width>
+                  <height>240</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>320</width>
+                  <height>240</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">border-width: 1px;border-style: solid;background-color: rgb(221,221,221);width:640px;</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="frame_3">
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="2,1">
+              <property name="spacing">
+               <number>27</number>
+              </property>
+              <property name="leftMargin">
+               <number>15</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QTextEdit" name="textEdit">
+                <property name="styleSheet">
+                 <string notr="true">background: white;
+font: 11pt &quot;Arial&quot;;
+</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout">
+                <property name="leftMargin">
+                 <number>50</number>
+                </property>
+                <property name="rightMargin">
+                 <number>50</number>
+                </property>
+                <item>
+                 <widget class="QPushButton" name="pushButton">
+                  <property name="styleSheet">
+                   <string notr="true">
+QPushButton
+{
+	height: 40px;
+	background-color: rgb(104,225,235); /*背景色*/ 
+	border-style: outset;    /* 边界内凹 */
+	border-width: 1px;     /* 边边界宽度 */
+	font: bold 15px;     /* 字体大小 */
+	min-width:2em;
+	color:rgb(69,71,85); /* 字体颜色 */
+	
+}
+/* 鼠标经过改变按钮颜色 */
+QPushButton:hover
+{
+	background-color: rgb(102,255,104);
+}
+</string>
+                  </property>
+                  <property name="text">
+                   <string>开启摄像头</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pushButton_2">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">
+QPushButton
+{
+	height: 40px;
+	background-color: rgb(104,225,235); /*背景色*/ 
+	border-style: outset;    /* 边界内凹 */
+	border-width: 1px;     /* 边边界宽度 */
+	font: bold 15px;     /* 字体大小 */
+	min-width:2em;
+	color:rgb(69,71,85); /* 字体颜色 */
+	
+}
+/* 鼠标经过改变按钮颜色 */
+QPushButton:hover
+{
+	background-color: rgb(102,255,104);
+}
+</string>
+                  </property>
+                  <property name="text">
+                   <string>拍照</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QFrame" name="frame_2">
+         <property name="minimumSize">
+          <size>
+           <width>300</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>350</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,1,1">
+          <item>
+           <widget class="QFrame" name="frame_5">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="styleSheet">
+                <string notr="true">font: 87 14pt &quot;Arial&quot;;
+color: white;
+border: none;
+margin-bottom: 5px;</string>
+               </property>
+               <property name="text">
+                <string>模式</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_7">
+               <item>
+                <widget class="QComboBox" name="comboBox">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background: white;
+font: 9pt &quot;Arial&quot;;</string>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>单目标定</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>双目标定</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>手眼标定</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButton_3">
+                 <property name="styleSheet">
+                  <string notr="true">
+QPushButton
+{
+	height: 40px;
+	background-color: rgb(104,225,235); /*背景色*/ 
+	border-style: outset;    /* 边界内凹 */
+	border-width: 1px;     /* 边边界宽度 */
+	font: bold 15px;     /* 字体大小 */
+	min-width:2em;
+	color:rgb(69,71,85); /* 字体颜色 */
+	
+}
+/* 鼠标经过改变按钮颜色 */
+QPushButton:hover
+{
+	background-color: rgb(102,255,104);
+}
+</string>
+                 </property>
+                 <property name="text">
+                  <string>选择</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <spacer name="verticalSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="frame_6">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="styleSheet">
+                <string notr="true">font: 87 14pt &quot;Arial&quot;;
+color: white;
+border: none;</string>
+               </property>
+               <property name="text">
+                <string>参数</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_8">
+               <item>
+                <layout class="QGridLayout" name="gridLayout">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_5">
+                   <property name="styleSheet">
+                    <string notr="true">color: white;
+border: none;
+margin-bottom: 5px;
+font: 9pt &quot;Arial&quot;;</string>
+                   </property>
+                   <property name="text">
+                    <string>列：</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="label_6">
+                   <property name="styleSheet">
+                    <string notr="true">color: white;
+border: none;
+margin-bottom: 5px;
+font: 9pt &quot;Arial&quot;;</string>
+                   </property>
+                   <property name="text">
+                    <string>行：</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QTextEdit" name="textEdit_2">
+                   <property name="maximumSize">
+                    <size>
+                     <width>70</width>
+                     <height>28</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">background: white;
+font: 9pt &quot;Arial&quot;;
+</string>
+                   </property>
+                   <property name="lineWrapMode">
+                    <enum>QTextEdit::WidgetWidth</enum>
+                   </property>
+                   <property name="placeholderText">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QTextEdit" name="textEdit_3">
+                   <property name="maximumSize">
+                    <size>
+                     <width>70</width>
+                     <height>28</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">background: white;
+font: 9pt &quot;Arial&quot;;
+</string>
+                   </property>
+                   <property name="lineWrapMode">
+                    <enum>QTextEdit::WidgetWidth</enum>
+                   </property>
+                   <property name="placeholderText">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0" colspan="2">
+                  <widget class="QLabel" name="label_7">
+                   <property name="styleSheet">
+                    <string notr="true">color: white;
+border: none;
+margin-bottom: 5px;
+font: 9pt &quot;Arial&quot;;</string>
+                   </property>
+                   <property name="text">
+                    <string>宽度（单位：mm)：</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0" colspan="2">
+                  <widget class="QTextEdit" name="textEdit_4">
+                   <property name="maximumSize">
+                    <size>
+                     <width>145</width>
+                     <height>28</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">background: white;
+font: 9pt &quot;Arial&quot;;
+</string>
+                   </property>
+                   <property name="lineWrapMode">
+                    <enum>QTextEdit::WidgetWidth</enum>
+                   </property>
+                   <property name="placeholderText">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButton_4">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>32</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">
+QPushButton
+{
+	height: 40px;
+	background-color: rgb(104,225,235); /*背景色*/ 
+	border-style: outset;    /* 边界内凹 */
+	border-width: 1px;     /* 边边界宽度 */
+	font: bold 15px;     /* 字体大小 */
+	min-width:2em;
+	color:rgb(69,71,85); /* 字体颜色 */
+	
+}
+/* 鼠标经过改变按钮颜色 */
+QPushButton:hover
+{
+	background-color: rgb(102,255,104);
+}
+</string>
+                 </property>
+                 <property name="text">
+                  <string>确定</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="frame_7">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <property name="leftMargin">
+              <number>50</number>
+             </property>
+             <property name="rightMargin">
+              <number>50</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="pushButton_5">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">
+QPushButton
+{
+	height: 40px;
+	background-color: rgb(104,225,235); /*背景色*/ 
+	border-style: outset;    /* 边界内凹 */
+	border-width: 1px;     /* 边边界宽度 */
+	font: bold 15px;     /* 字体大小 */
+	min-width:2em;
+	color:rgb(69,71,85); /* 字体颜色 */
+	
+}
+/* 鼠标经过改变按钮颜色 */
+QPushButton:hover
+{
+	background-color: rgb(102,255,104);
+}
+</string>
+               </property>
+               <property name="text">
+                <string>标定</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_6">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">
+QPushButton
+{
+	height: 40px;
+	background-color: rgb(104,225,235); /*背景色*/ 
+	border-style: outset;    /* 边界内凹 */
+	border-width: 1px;     /* 边边界宽度 */
+	font: bold 15px;     /* 字体大小 */
+	min-width:2em;
+	color:rgb(69,71,85); /* 字体颜色 */
+	
+}
+/* 鼠标经过改变按钮颜色 */
+QPushButton:hover
+{
+	background-color: rgb(102,255,104);
+}
+</string>
+               </property>
+               <property name="text">
+                <string>保存</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,9 @@
+{
+    "baseX": 0,
+    "baseY": 0,
+    "default_Z": 0.25,
+    "idVendor": "28E9",
+    "idProduct": "018A",
+    "com": "COM13",
+    "claw_thread": "True" 
+}

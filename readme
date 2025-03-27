@@ -1,0 +1,61 @@
+## 机械臂项目
+
+###  config参数
+argument.json中的参数说明
+...
+    "baseX": 0,//机械臂底座x坐标
+    "baseY": 0,//机械臂底座y坐标
+    "default_Z": 0.25,//机械臂底座z坐标
+    "idVendor": "28E9",//机械臂usb接口的idVendor
+    "idProduct": "018A",//机械臂usb接口的idProduct
+    "com": "COM13",//机械臂usb接口的com 用于夹爪线程
+    "claw_thread": "True" //是否开启夹爪线程
+...
+pose_config.json中的参数说明
+...
+    "res": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+    ],# 机械臂的睡眠点位置
+    "zero": [
+        222,
+        3649,
+        46462,
+        16529,
+        45848,
+        4909
+    ], 机械臂的安全点位置
+    "zero_pose": [
+        212.6780147757499,
+        -0.008595470952314645,
+        174.7365548995827,
+        -0.05488580558178437,
+        1.5641305671108854,
+        3.132217683652705
+    ]# 机械臂的零点位置
+...
+
+### 函数声明
+
+def Read_Track(self, method, file_path, reset = True, command = None)为轨迹读取与测试函数，其中method为读取方式，file_path为文件路径，reset为是否重置机械臂，command为是否执行命令
+
+
+## 环境配置
+PyQt5
+opencv-python
+Ipython
+kerboard>=0.13.5
+pyusb>=1.2.1
+pyserial>=3.5
+可用pip install -r requirements.txt进行安装
+
+## 使用说明
+```python
+在Control_Arm.py中main函数里面写了运动方式的测试代码，可以直接运行。
+
+##usb串口设置
+记得安装libusb
