@@ -8,7 +8,7 @@ from threading import Thread
 import multiprocessing
 #import cv2
 #import keyboard
-
+from keyboard_control_module import KeyboardControl
 from Robot_Arm import Can_transfer, claw_control
 from Func import Json_Updata
 
@@ -278,6 +278,12 @@ class ArmControl():
             self.can_.write_traj_flag = True
             self.can_.out_traj_button(self.targets[i])
             t1, t2, t3, t4, t5, t6 = False, False, False, False, False, False
+            px_out=212.6780147757499,
+            py_out=-0.008595470952314645,
+            pz_out=174.7365548995827,
+            alpha_out=-0.05488580558178437,
+            beta_out=1.5641305671108854,
+            gama_out=3.132217683652705
             ts = time.time()
             while True:
                 self.can_.Update()
@@ -290,12 +296,12 @@ class ArmControl():
                         print('4轴', self.can_._4_link_angle)
                         print('5轴', self.can_._5_link_angle)
                         print('6轴', self.can_._6_link_angle)
-                        print('末端x', self.can_.c_angle.px_out)
-                        print('末端y', self.can_.c_angle.py_out)
-                        print('末端z', self.can_.c_angle.pz_out)
-                        print('末端z角度', self.can_.c_angle.alpha_out)
-                        print('末端y角度', self.can_.c_angle.beta_out)
-                        print('末端x角度', self.can_.c_angle.gama_out)
+                        print('末端x', self.can_.c_angle.px_out)#self.can_.c_angle.px_out
+                        print('末端y', self.can_.c_angle.py_out)#self.can_.c_angle.py_out
+                        print('末端z', self.can_.c_angle.pz_out)#self.can_.c_angle.pz_out
+                        print('末端z角度', self.can_.c_angle.alpha_out)#self.can_.c_angle.alpha_out
+                        print('末端y角度', self.can_.c_angle.beta_out)#self.can_.c_angle.beta_out
+                        print('末端x角度', self.can_.c_angle.gama_out)#self.can_.c_angle.gama_out
                     if abs(self.can_.c_angle.px_out - self.targets[i][0]) < 0.01:
                         t1 = True
                     if abs(self.can_.c_angle.py_out - self.targets[i][1]) < 0.01:
@@ -363,8 +369,8 @@ if __name__ == "__main__":
 ########################################################################################################################################################
 #                                                                    机械臂校准                                                                        #
 ########################################################################################################################################################
-    # AC.Arm_Adjust() # 按q退出，保存校准数据
-    # AC.Calibration_Pose()
+    AC.Arm_Adjust() # 按q退出，保存校准数据
+    AC.Calibration_Pose()
     
 ########################################################################################################################################################
 #                                                                    基础动作                                                                          #
@@ -398,9 +404,20 @@ if __name__ == "__main__":
 ########################################################################################################################################################
 #                                                                    到达目标点                                                                          #
 ########################################################################################################################################################
-    #AC.Set_Arm("COM13", claw_thread=True)#夹爪线程，没有夹爪不需要开启
-    #输入目标坐标
-    target_pose = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    #移动到目标点
-    AC.Move_To_Position(target_pose, reset=True)
+    # AC.Set_Arm("COM13", claw_thread=True)#夹爪线程，没有夹爪不需要开启
+    # 输入目标坐标
+    # target_pose = [  212.6780147757499,
+    #     -0.008595470952314645,
+    #     174.7365548995827,
+    #     -0.05488580558178437,
+    #     1.5641305671108854,
+    #     3.132217683652705]
+    # # #移动到目标点
+    # AC.Move_To_Position(target_pose, reset=False)
     
+########################################################################################################################################################
+#                                                                    键盘控制                                                                         #
+# ########################################################################################################################################################
+    
+    # AC.keyboardControl = KeyboardControl(AC.can_)  # 传入 can_transfer 实例
+    # AC.keyboardControl.run()  # 运行键盘控制

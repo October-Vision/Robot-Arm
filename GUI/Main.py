@@ -1,10 +1,10 @@
 from datetime import datetime
 import json
 import threading
+
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5 import QtCore
 from PyQt5.QtGui import QImage, QPixmap
-
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough

@@ -59,3 +59,34 @@ pyserial>=3.5
 
 ##usb串口设置
 记得安装libusb
+    
+    
+    def send_command(self, command_data):
+        """
+        处理并发送命令数据
+        :param command_data: 包含命令的列表
+        """
+        print(f"发送命令: {command_data}")
+        # 根据 command_data 设置对应电机的目标角度
+        motor_id = command_data[0]  # 电机编号
+        target_angle = command_data[2]  # 目标角度
+
+        # 根据电机编号设置目标角度
+        if motor_id == 1:
+            self._1_edit_angle = target_angle
+        elif motor_id == 2:
+            self._2_edit_angle = target_angle
+        elif motor_id == 3:
+            self._3_edit_angle = target_angle
+        elif motor_id == 4:
+            self._4_edit_angle = target_angle
+        elif motor_id == 5:
+            self._5_edit_angle = target_angle
+        elif motor_id == 6:
+            self._6_edit_angle = target_angle
+        else:
+            print(f"未知的电机编号: {motor_id}")
+            return
+
+        self.write_angle_flag = True  # 设置标志位，触发 Update 方法中的写入逻辑
+        self.Update()  # 调用 Update 方法以发送命令

@@ -5,6 +5,7 @@ import math
 import os
 import time
 import serial
+import numpy as np
 
 
 class TrajPlan:
@@ -113,8 +114,54 @@ class ClcAngle:
         self.start()
 
     def start(self):
-        self.a2 = 37.5; self.a3 = 160.1; self.a4 = 15  # mm
-        self.d2 = 0; self.d3 = 0; self.d4 = 142.15; self.d6 = 33  # mm
+        # Modified DH parameters from robot_arm.m
+        # Link 1
+        self.d1 = 106.0  # mm
+        self.a1 = 0
+        self.alpha1 = 0
+        self.theta1_offset = 0
+        
+        # Link 2
+        self.d2 = 74.0  # mm
+        self.a2 = 37.5  # mm
+        self.alpha2 = math.pi/2
+        self.theta2_offset = math.pi/2
+        
+        # Link 3
+        self.d3 = -32.0  # mm
+        self.a3 = 160.1  # mm
+        self.alpha3 = 0
+        self.theta3_offset = 0
+        
+        # Link 4
+        self.d4 = 130.0  # mm
+        self.a4 = 5.0  # mm
+        self.alpha4 = -math.pi*3/2
+        self.theta4_offset = math.pi/2
+        
+        # Link 5
+        self.d5 = 0
+        self.a5 = 0
+        self.alpha5 = math.pi/2
+        self.theta5_offset = math.pi/2
+        
+        # Joint limits (in radians)
+        self.qlim = [
+            [-150/180*math.pi, 150/180*math.pi],  # Joint 1
+            [-100/180*math.pi, 90/180*math.pi],   # Joint 2
+            [-90/180*math.pi, 90/180*math.pi],    # Joint 3
+            [-180/180*math.pi, 180/180*math.pi],  # Joint 4
+            [-90/180*math.pi, 90/180*math.pi]     # Joint 5
+        ]
+        
+        # Initialize joint angles to home position
+        self.theta1 = 0
+        self.theta2 = 0
+        self.theta3 = 0
+        self.theta4 = 0
+        self.theta5 = 0
+        
+        # Initialize other variables
         self.x = 0; self.y = 0; self.z = 0
         self.bata = 0; self.alpha = 0; self.gama = 0  # rad
 
@@ -312,78 +359,122 @@ class ClcAngle:
             return
         
     def IK_CLC(self):
-        tmp_d = 0.0
-        px, py = 0.0, 0.0
-        c3 = [0.0] * 8
-        s3 = [0.0] * 8
-        pai_2 = math.pi / 2.0
-        self.end_effector_clc()
-
-        #thta1 
-        self.thtaValue[0][0] = (math.atan2(self.y, self.x) - math.atan2(self.d2, math.sqrt(self.x * self.x + self.y * self.y - self.d2 * self.d2)))
-        self.thtaValue[0][1] = (math.atan2(self.y, self.x) - math.atan2(self.d2, -math.sqrt(self.x * self.x + self.y * self.y - self.d2 * self.d2)))
-        self.s1_1 = math.sin(self.thtaValue[0][0])
-        self.c1_1 = math.cos(self.thtaValue[0][0])
-        self.s1_2 = math.sin(self.thtaValue[0][1])
-        self.c1_2 = math.cos(self.thtaValue[0][1])
-
-        #thta3
-        px = 2 * self.d3 * self.a4 + 2 * self.d4 * self.a3
-        py = 2 * self.a4 * self.a3 - 2 * self.d4 * self.d3
-        tmp_sq = self.d2 * self.d2 + self.a4 * self.a4 + self.a3 * self.a3 + self.d4 * self.d4 + self.d3 * self.d3
-        tmp_test = self.x * self.x + self.y * self.y + self.z * self.z + self.a2 * self.a2
-        tmp_d = tmp_test - tmp_sq - 2 * self.x * self.c1_1 * self.a2 - 2 * self.y * self.s1_1 * self.a2
-        
-        self.thtaValue[2][0] = math.atan2(py, px) - math.atan2(tmp_d, math.sqrt(px * px + py * py - tmp_d * tmp_d))
-        self.thtaValue[2][1] = math.atan2(py, px) - math.atan2(tmp_d, -math.sqrt(px * px + py * py - tmp_d * tmp_d))
-        tmp_d = tmp_test - tmp_sq - 2 * self.x * self.c1_2 * self.a2 - 2 * self.y * self.s1_2 * self.a2
-        denominator = px * px + py * py - tmp_d * tmp_d
-        if denominator < 0:
-            denominator = 0 
-        self.thtaValue[2][2] = math.atan2(py, px) - math.atan2(tmp_d, math.sqrt(denominator)) #重大错误！！！
-        self.thtaValue[2][3] = math.atan2(py, px) - math.atan2(tmp_d, -math.sqrt(denominator)) #重大错误！！！
-
-        #thta2
-        c3[0] = math.cos(self.thtaValue[2][0])
-        c3[1] = math.cos(self.thtaValue[2][1])
-        c3[2] = math.cos(self.thtaValue[2][2])
-        c3[3] = math.cos(self.thtaValue[2][3])
-        s3[0] = math.sin(self.thtaValue[2][0])
-        s3[1] = math.sin(self.thtaValue[2][1])
-        s3[2] = math.sin(self.thtaValue[2][2])
-        s3[3] = math.sin(self.thtaValue[2][3])
-
-        px = self.a4 * c3[0] + self.a3 - self.d4 * s3[0]
-        py = -self.d4 * c3[0] - self.a4 * s3[0] - self.d3
-        tmp_d = self.z
-
-        self.thtaValue[1][0] = math.atan2(py, px) - math.atan2(tmp_d, math.sqrt(px * px + py * py - tmp_d * tmp_d)) + pai_2
-        self.thtaValue[1][1] = math.atan2(py, px) - math.atan2(tmp_d, -math.sqrt(px * px + py * py - tmp_d * tmp_d)) + pai_2
-
-        px = self.a4 * c3[1] + self.a3 - self.d4 * s3[1]
-        py = -self.d4 * c3[1] - self.a4 * s3[1] - self.d3
-        self.thtaValue[1][2] = math.atan2(py, px) - math.atan2(tmp_d, math.sqrt(px * px + py * py - tmp_d * tmp_d)) + pai_2
-        self.thtaValue[1][3] = math.atan2(py, px) - math.atan2(tmp_d, -math.sqrt(px * px + py * py - tmp_d * tmp_d)) + pai_2
-
-        px = self.a4 * c3[2] + self.a3 - self.d4 * s3[2]
-        py = -self.d4 * c3[2] - self.a4 * s3[2] - self.d3
-        self.thtaValue[1][4] = math.atan2(py, px) - math.atan2(tmp_d, math.sqrt(px * px + py * py - tmp_d * tmp_d)) + pai_2
-        self.thtaValue[1][5] = math.atan2(py, px) - math.atan2(tmp_d, -math.sqrt(px * px + py * py - tmp_d * tmp_d)) + pai_2
-
-        px = self.a4 * c3[3] + self.a3 - self.d4 * s3[3]
-        py = -self.d4 * c3[3] - self.a4 * s3[3] - self.d3
-        self.thtaValue[1][6] = math.atan2(py, px) - math.atan2(tmp_d, math.sqrt(px * px + py * py - tmp_d * tmp_d)) + pai_2
-        self.thtaValue[1][7] = math.atan2(py, px) - math.atan2(tmp_d, -math.sqrt(px * px + py * py - tmp_d * tmp_d)) + pai_2
-        self.theta23_1[0] = self.thtaValue[1][0] + self.thtaValue[2][0] - pai_2
-        self.theta23_1[1] = self.thtaValue[1][1] + self.thtaValue[2][0] - pai_2
-        self.theta23_1[2] = self.thtaValue[1][2] + self.thtaValue[2][1] - pai_2
-        self.theta23_1[3] = self.thtaValue[1][3] + self.thtaValue[2][1] - pai_2
-        self.theta23_1[4] = self.thtaValue[1][4] + self.thtaValue[2][2] - pai_2
-        self.theta23_1[5] = self.thtaValue[1][5] + self.thtaValue[2][2] - pai_2
-        self.theta23_1[6] = self.thtaValue[1][6] + self.thtaValue[2][3] - pai_2
-        self.theta23_1[7] = self.thtaValue[1][7] + self.thtaValue[2][3] - pai_2
-
-        self.caclu_one_result()
+        try:
+            # Get target position and orientation
+            self.end_effector_clc()
+            
+            # Calculate theta1
+            theta1_1 = math.atan2(self.y, self.x)
+            theta1_2 = math.atan2(-self.y, -self.x)
+            
+            # Calculate theta3
+            A = self.x**2 + self.y**2 + self.z**2 - self.a2**2 - self.a3**2 - self.d2**2 - self.d3**2
+            B = 2 * self.a2 * self.a3
+            C = 2 * self.a2 * self.d3
+            D = 2 * self.a3 * self.d2
+            
+            # Check for numerical stability
+            denominator = math.sqrt(B**2 + D**2)
+            if abs(denominator) < 1e-6:
+                print("警告：接近奇异点，无法计算逆运动学解")
+                self.out_result_index = 0
+                return
+            
+            # Calculate possible theta3 values
+            try:
+                theta3_1 = math.acos((A - C) / denominator) - math.atan2(D, B)
+                theta3_2 = -math.acos((A - C) / denominator) - math.atan2(D, B)
+            except ValueError:
+                print("警告：目标位置超出工作空间")
+                self.out_result_index = 0
+                return
+            
+            # Calculate theta2
+            for i in range(2):
+                theta1 = theta1_1 if i == 0 else theta1_2
+                for j in range(2):
+                    theta3 = theta3_1 if j == 0 else theta3_2
+                    
+                    # Calculate intermediate values
+                    A = self.x * math.cos(theta1) + self.y * math.sin(theta1)
+                    B = self.z
+                    C = self.a2 + self.a3 * math.cos(theta3) + self.d3 * math.sin(theta3)
+                    D = self.d2 + self.a3 * math.sin(theta3) - self.d3 * math.cos(theta3)
+                    
+                    # Check for numerical stability
+                    denominator = A*C + B*D
+                    if abs(denominator) < 1e-6:
+                        continue
+                    
+                    # Calculate theta2
+                    theta2 = math.atan2(A*D - B*C, denominator)
+                    
+                    # Calculate theta4 and theta5
+                    R = np.array([
+                        [math.cos(theta1)*math.cos(theta2)*math.cos(theta3) - math.cos(theta1)*math.sin(theta2)*math.sin(theta3),
+                         -math.cos(theta1)*math.cos(theta2)*math.sin(theta3) - math.cos(theta1)*math.sin(theta2)*math.cos(theta3),
+                         math.sin(theta1)],
+                        [math.sin(theta1)*math.cos(theta2)*math.cos(theta3) - math.sin(theta1)*math.sin(theta2)*math.sin(theta3),
+                         -math.sin(theta1)*math.cos(theta2)*math.sin(theta3) - math.sin(theta1)*math.sin(theta2)*math.cos(theta3),
+                         -math.cos(theta1)],
+                        [math.sin(theta2)*math.cos(theta3) + math.cos(theta2)*math.sin(theta3),
+                         -math.sin(theta2)*math.sin(theta3) + math.cos(theta2)*math.cos(theta3),
+                         0]
+                    ])
+                    
+                    # Calculate theta4 and theta5
+                    try:
+                        theta4 = math.atan2(R[2,0], R[2,1])
+                        theta5 = math.atan2(math.sqrt(R[0,2]**2 + R[1,2]**2), R[2,2])
+                    except ValueError:
+                        continue
+                    
+                    # Store solution
+                    solution_index = i * 2 + j
+                    self.thtaValue[0][solution_index] = theta1 - self.theta1_offset
+                    self.thtaValue[1][solution_index] = theta2 - self.theta2_offset
+                    self.thtaValue[2][solution_index] = theta3 - self.theta3_offset
+                    self.thtaValue[3][solution_index] = theta4 - self.theta4_offset
+                    self.thtaValue[4][solution_index] = theta5 - self.theta5_offset
+            
+            # Check joint limits and select valid solutions
+            valid_solutions = []
+            for i in range(4):
+                valid = True
+                for j in range(5):
+                    if not (self.qlim[j][0] <= self.thtaValue[j][i] <= self.qlim[j][1]):
+                        valid = False
+                        break
+                if valid:
+                    valid_solutions.append(i)
+            
+            # If no valid solutions, return error
+            if not valid_solutions:
+                print("警告：没有有效的关节角度解")
+                self.out_result_index = 0
+                return
+            
+            # Select the best solution (closest to current position)
+            best_solution = valid_solutions[0]
+            min_distance = float('inf')
+            for i in valid_solutions:
+                distance = 0
+                for j in range(5):
+                    distance += (self.thtaValue[j][i] - self.angle_radian[j][0])**2
+                if distance < min_distance:
+                    min_distance = distance
+                    best_solution = i
+            
+            # Store the best solution
+            for i in range(5):
+                self.out_thtaValue[i][0] = self.thtaValue[i][best_solution]
+            
+            self.out_result_index = 1
+            
+        except Exception as e:
+            print(f"错误：逆运动学计算失败 - {str(e)}")
+            self.out_result_index = 0
+            return
 
     def caclu_one_result(self):
         s12 = [0.0] * 8
@@ -1107,36 +1198,6 @@ class Can_transfer:
 
         return
 
-    def send_command(self, command_data):
-        """
-        处理并发送命令数据
-        :param command_data: 包含命令的列表
-        """
-        print(f"发送命令: {command_data}")
-        # 根据 command_data 设置对应电机的目标角度
-        motor_id = command_data[0]  # 电机编号
-        target_angle = command_data[2]  # 目标角度
-
-        # 根据电机编号设置目标角度
-        if motor_id == 1:
-            self._1_edit_angle = target_angle
-        elif motor_id == 2:
-            self._2_edit_angle = target_angle
-        elif motor_id == 3:
-            self._3_edit_angle = target_angle
-        elif motor_id == 4:
-            self._4_edit_angle = target_angle
-        elif motor_id == 5:
-            self._5_edit_angle = target_angle
-        elif motor_id == 6:
-            self._6_edit_angle = target_angle
-        else:
-            print(f"未知的电机编号: {motor_id}")
-            return
-
-        self.write_angle_flag = True  # 设置标志位，触发 Update 方法中的写入逻辑
-        self.Update()  # 调用 Update 方法以发送命令
-
 # 控制舵机
 def claw_control(claw_state, COM):
     # 设置机械爪串口连接参数
@@ -1153,3 +1214,4 @@ def claw_control(claw_state, COM):
         else:
             time.sleep(0.1)
   
+
