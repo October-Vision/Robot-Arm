@@ -63,7 +63,7 @@ class ArmControl():
         
     # 获取当前位姿
     def Get_Pose(self):
-        self.can_.Update()
+        self.can_.Update()  # 调用 Update 方法更新电机状态
         pose = [self.can_._1_link_angle,
                 self.can_._2_link_angle,
                 self.can_._3_link_angle,
@@ -274,22 +274,34 @@ class ArmControl():
                         
     # 执行轨迹
     def Run_Arm(self, start_claw = False):
+        # 遍历所有目标位置
         for i in range(len(self.targets)):
+            # 设置标志位，表示正在写入轨迹
             self.can_.write_traj_flag = True
+            # 输出当前目标位置
             self.can_.out_traj_button(self.targets[i])
+            # 初始化六个标志位，用于判断每个轴是否到达目标位置
             t1, t2, t3, t4, t5, t6 = False, False, False, False, False, False
+            # 初始化末端执行器的位置和角度
             px_out=212.6780147757499,
             py_out=-0.008595470952314645,
             pz_out=174.7365548995827,
             alpha_out=-0.05488580558178437,
             beta_out=1.5641305671108854,
             gama_out=3.132217683652705
+            # 记录当前时间
             ts = time.time()
+            # 进入循环，直到所有轴到达目标位置或超时
             while True:
+                # 更新CAN总线状态
                 self.can_.Update()
+                # 如果不再写入轨迹
                 if not self.can_.write_traj_flag:
+                    # 如果需要打印目标位置
                     if self.print_targets:
+                        # 清屏
                         os.system('cls' if os.name == 'nt' else 'clear')
+                        # 打印每个轴的角度
                         print('1轴', self.can_._1_link_angle)
                         print('2轴', self.can_._2_link_angle)
                         print('3轴', self.can_._3_link_angle)
@@ -369,8 +381,8 @@ if __name__ == "__main__":
 ########################################################################################################################################################
 #                                                                    机械臂校准                                                                        #
 ########################################################################################################################################################
-    AC.Arm_Adjust() # 按q退出，保存校准数据
-    AC.Calibration_Pose()
+    # AC.Arm_Adjust() # 按q退出，保存校准数据
+    # AC.Calibration_Pose()
     
 ########################################################################################################################################################
 #                                                                    基础动作                                                                          #
@@ -413,11 +425,11 @@ if __name__ == "__main__":
     #     1.5641305671108854,
     #     3.132217683652705]
     # # #移动到目标点
-    # AC.Move_To_Position(target_pose, reset=False)
+    # AC.Move_To_Position(target_pose, reset=True)
     
 ########################################################################################################################################################
 #                                                                    键盘控制                                                                         #
-# ########################################################################################################################################################
+########################################################################################################################################################
     
-    # AC.keyboardControl = KeyboardControl(AC.can_)  # 传入 can_transfer 实例
-    # AC.keyboardControl.run()  # 运行键盘控制
+    AC.keyboardControl = KeyboardControl(AC.can_)  # 传入AC.can_ can_transfer 实例
+    AC.keyboardControl.run()  # 运行键盘控制

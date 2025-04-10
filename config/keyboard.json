@@ -12,6 +12,38 @@
             "description": "关节2回转",
             "data": [2, 2, 100000, 0, 0]
         },
+        "forward_1": {
+            "description": "关节1正转",
+            "joint_1_data": [1, 1, 100000, 0, 0]
+        },
+        "back_1": {
+            "description": "关节1回转",
+            "joint_1_data": [1, 1, 100000, 0, 0]
+        },
+        "forward_2": {
+            "description": "关节2正转",
+            "joint_2_data": [2, 2, 100000, 0, 0]
+        },
+        "back_2": {
+            "description": "关节2回转",
+            "joint_2_data": [2, 2, 100000, 0, 0]
+        },
+        "forward_3": {
+            "description": "关节3正转",
+            "joint_3_data": [3, 3, 100000, 0, 0]
+        },
+        "back_3": {
+            "description": "关节3回转",
+            "joint_3_data": [3, 3, 100000, 0, 0]
+        },
+        "forward_4": {
+            "description": "关节4正转",
+            "joint_4_data": [4, 4, 100000, 0, 0]
+        },
+        "back_4": {
+            "description": "关节4回转",
+            "joint_4_data": [4, 4, 100000, 0, 0]
+        },
         "left": {
             "description": "关节1反转",
             "data": [1, 1, -300000, 0, 0]
@@ -27,6 +59,15 @@
         "down": {
             "description": "关节3正转",
             "data": [3, 3, -300000, 0, 0]
+        },
+        "reset": {
+            "description": "机械臂回正",
+            "joint_1_data": [1, 1, 300000, 0, 0],
+            "joint_2_data": [2, 2, 100000, 0, 0],
+            "joint_3_data": [3, 3, 300000, 0, 0],
+            "joint_4_data": [4, 4, 0, 0, 0],
+            "joint_5_data": [5, 5, 0, 0, 0],
+            "joint_6_data": [6, 6, 0, 0, 0]
         }
     }
 }

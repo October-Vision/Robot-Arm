@@ -1055,7 +1055,7 @@ class Can_transfer:
         # 处理读取的数据
         angle_tmp = self.sign_extend((self.read_Buffer[8] << 24) + (self.read_Buffer[9] << 16) + (self.read_Buffer[10] << 8) + self.read_Buffer[11], 32)
         self._1_link_angle = angle_tmp
-
+        
         angle_tmp = self.sign_extend((self.read_Buffer[17] << 24) + (self.read_Buffer[18] << 16) + (self.read_Buffer[19] << 8) + self.read_Buffer[20], 32)
         self._2_link_angle = angle_tmp
         
@@ -1152,4 +1152,3 @@ def claw_control(claw_state, COM):
             break
         else:
             time.sleep(0.1)
-  

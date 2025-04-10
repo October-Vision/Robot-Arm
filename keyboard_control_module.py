@@ -1,64 +1,132 @@
 import keyboard
+import time
 import json
-import os  # 添加 os 模块用于路径检查
+import os  
+from Robot_Arm import Can_transfer
+from Func import Json_Updata
 
-class KeyboardControl:
-    def load_config(self, json_path='config/keyboard.json'):  # 修正路径
+class KeyboardControl():
+    def load_config(self,json_path='config/argument.json'):
         # 检查文件是否存在
-        if not os.path.exists(json_path):
-            raise FileNotFoundError(f"配置文件未找到: {json_path}")
-        # 检查文件是否为空
-        if os.path.getsize(json_path) == 0:
-            raise ValueError(f"配置文件为空: {json_path}")
-        # 读取配置文件
-        with open(json_path, 'r', encoding='utf-8') as f:  # 显式指定编码为 utf-8
+        if os.path.exists(json_path):
+            with open(json_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        else:
+            print(f"配置文件 {json_path} 不存在")
+        with open(json_path, 'r', encoding='utf-8') as f:
             try:
                 self.argument = json.load(f)
             except json.JSONDecodeError as e:
-                raise ValueError(f"配置文件格式错误: {json_path}. 错误信息: {e}")
-        # 获取 idVendor 和 idProduct
+                raise ValueError(f"JSON 解码错误: {e}")
         self.idVendor = int(self.argument["idVendor"], 16)
         self.idProduct = int(self.argument["idProduct"], 16)
-        self.keyboard_config = self.argument["keyboard"]
 
-    def __init__(self, can_transfer_instance):
+    def __init__(self,can_transfer):
+        # with open('config/argument.json', 'r', encoding='utf-8') as f:
+        #     self.argument = json.load(f)
+        # self.idVendor = int(self.argument["idVendor"],16)
+        # self.idProduct = int(self.argument["idProduct"],16)
         try:
             self.load_config()  # 初始化 self.argument
         except (FileNotFoundError, ValueError) as e:
             print(e)
             print("请确保配置文件存在且内容正确。")
             raise
-        self.can_ = can_transfer_instance
+        self.can_ = can_transfer
         self.can_.Update()
-        self.bind_keys()
         if self.can_.open_deviceflag:
-            print("设备已连接")
+            print("USB设备打开成功")
         else:
-            print("设备未找到")
+            print("USB设备打开失败")
+            return
+        print(f"传入的 can_transfer 类型: {type(self.can_)}")  # 调试代码
+        self.joint_1_key_data = 100
+        self.joint_2_key_data = 100
+        self.joint_3_key_data = 100
+        self.joint_4_key_data = 100
+        self.joint_5_key_data = 100
+        self.joint_6_key_data = 100
 
-    def bind_keys(self):
-        # 绑定键盘事件
-        keyboard.add_hotkey('w', lambda: self.control_joint_1_and_2_and_3())
-        keyboard.add_hotkey('s', lambda: self.can_.send_command(self.keyboard_config["backward"]["data"]))
-        keyboard.add_hotkey('a', lambda: self.can_.send_command(self.keyboard_config["left"]["data"]))
-        keyboard.add_hotkey('d', lambda: self.can_.send_command(self.keyboard_config["right"]["data"]))
-        keyboard.add_hotkey('q', lambda: self.can_.send_command(self.keyboard_config["up"]["data"]))
-        keyboard.add_hotkey('e', lambda: self.can_.send_command(self.keyboard_config["down"]["data"]))
-        print("键盘事件已绑定: 'w' -> 前进, 's' -> 后退, 'a' -> 左转, 'd' -> 右转, 'q' -> 上升, 'e' -> 下降")
+    def update_joint_data(self):
+        # 从机械臂读取当前电机状态并更新
+        # print("调用 Update 方法...")
+        self.can_.Update()
+        self.joint_1_key_data = self.can_._1_link_angle
+        self.joint_2_key_data = self.can_._2_link_angle
+        self.joint_3_key_data = self.can_._3_link_angle
+        self.joint_4_key_data = self.can_._4_link_angle
+        self.joint_5_key_data = self.can_._5_link_angle
+        self.joint_6_key_data = self.can_._6_link_angle
+        print("电机状态:", self.joint_1_key_data, self.joint_2_key_data, self.joint_3_key_data, self.joint_4_key_data, self.joint_5_key_data, self.joint_6_key_data)
 
-    def control_joint_1_and_2_and_3(self):
-        # 控制关节 1 和关节 2
-        joint_1_command = self.keyboard_config["forward"]["joint_1_data"]
-        joint_2_command = self.keyboard_config["forward"]["joint_2_data"]
-        joint_3_command = self.keyboard_config["forward"]["joint_3_data"]
-        self.can_.send_command(joint_1_command)
-        self.can_.send_command(joint_2_command)
-        self.can_.send_command(joint_3_command)
+    def control_joint(self, joint_id, direction):
+        # 根据方向调整对应关节的角度
+        self.step=50000 #每次调整的步长
+        if joint_id == 1:
+            self.joint_1_key_data += self.step * direction
+            self.can_.send_command([1, 0, self.joint_1_key_data])
+            print(f"控制1号电机，当前角度: {self.joint_1_key_data}")
+        elif joint_id == 2:
+            self.joint_2_key_data += self.step * direction
+            self.can_.send_command([2, 0, self.joint_2_key_data])
+            print(f"控制2号电机，当前角度: {self.joint_2_key_data}")
+        elif joint_id == 3:
+            self.joint_3_key_data += self.step * direction
+            self.can_.send_command([3, 0, self.joint_3_key_data])
+        elif joint_id == 4:
+            self.joint_4_key_data += self.step * direction
+            self.can_.send_command([4, 0, self.joint_4_key_data])
+        elif joint_id == 5:
+            self.joint_5_key_data += self.step * direction
+            self.can_.send_command([5, 0, self.joint_5_key_data])
+        elif joint_id == 6:
+            self.joint_6_key_data += self.step * direction
+            self.can_.send_command([6, 0, self.joint_6_key_data])
 
     def run(self):
-        # 运行键盘监听
-        print("按下 'esc' 键退出程序")
-        keyboard.wait('esc')  # 等待 'esc' 键被按下
-        # 释放键盘事件
-        keyboard.unhook_all()
-        print("程序已退出")
+        print("键盘控制已启动，按下 'q' 退出")
+        self.update_joint_data()  # 初始化关节数据
+        while True:
+            try:
+                if keyboard.is_pressed('a'):  # 控制1号电机增加
+                    self.control_joint(1, 1)
+                    time.sleep(0.2)
+                elif keyboard.is_pressed('d'):  # 控制1号电机减少
+                    self.control_joint(1, -1)
+                    time.sleep(0.2)
+                elif keyboard.is_pressed('w'):  # 控制2号电机增加
+                    self.control_joint(2, 1)
+                    time.sleep(0.2)
+                elif keyboard.is_pressed('s'):  # 控制2号电机减少
+                    self.control_joint(2, -1)
+                    time.sleep(0.2)
+                elif keyboard.is_pressed('e'):  # 控制3号电机增加
+                    self.control_joint(3, 1)
+                    time.sleep(0.2)
+                elif keyboard.is_pressed('r'):  # 控制3号电机减少
+                    self.control_joint(3, -1)
+                    time.sleep(0.2)
+                elif keyboard.is_pressed('t'):  # 控制4号电机增加
+                    self.control_joint(4, 1)
+                    time.sleep(0.2)
+                elif keyboard.is_pressed('y'):  # 控制4号电机减少
+                    self.control_joint(4, -1)
+                    time.sleep(0.2)
+                elif keyboard.is_pressed('u'):  # 控制5号电机增加
+                    self.control_joint(5, 1)
+                    time.sleep(0.2)
+                elif keyboard.is_pressed('i'):  # 控制5号电机减少
+                    self.control_joint(5, -1)
+                    time.sleep(0.2)
+                elif keyboard.is_pressed('o'):  # 控制6号电机增加
+                    self.control_joint(6, 1)
+                    time.sleep(0.2)
+                elif keyboard.is_pressed('p'):  # 控制6号电机减少
+                    self.control_joint(6, -1)
+                    time.sleep(0.2)
+                elif keyboard.is_pressed('q'):  # 退出
+                    print("退出键盘控制")
+                    break
+            except Exception as e:
+                print(f"发生错误: {e}")
+                break
