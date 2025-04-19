@@ -784,8 +784,8 @@ class Can_transfer:
                 tmp_angle = int(self.traj_out.out_traj_theta[i][self.send_inte_point] * (51200.0 / 360.0) * 3.0 * (180.0 / math.pi) * 5.18) + self.zero_4
                 tmp_speed = int(self.traj_out.out_traj_theta_V[i][self.send_inte_point] * 9.549 * 3.0 * 5.18)
             elif i == 4:
-                tmp_angle = int(self.traj_out.out_traj_theta[i][self.send_inte_point] * (51200.0 / 360.0) * 1.6 * (180.0 / math.pi) * 5.18) + self.zero_5
-                tmp_speed = int(self.traj_out.out_traj_theta_V[i][self.send_inte_point] * 9.549 * 1.6 * 5.18)
+                tmp_angle = int(self.traj_out.out_traj_theta[i][self.send_inte_point] * (51200.0 / 360.0) * 1.6 * (180.0 / math.pi) ) + self.zero_5
+                tmp_speed = int(self.traj_out.out_traj_theta_V[i][self.send_inte_point] * 9.549 * 1.6 )
             elif i == 5:
                 tmp_angle = int(self.traj_out.out_traj_theta[i][self.send_inte_point] * (51200.0 / 360.0) * (180.0 / math.pi)) + self.zero_6
                 tmp_speed = int(self.traj_out.out_traj_theta_V[i][self.send_inte_point] * 9.549)
@@ -1097,7 +1097,7 @@ class Can_transfer:
         angle_tmp = self._5_link_angle - self.zero_5
         if abs(angle_tmp) < 5:
             angle_tmp = 0
-        self.angle_radian[4][0] = angle_tmp / (51200.0 / 360.0) / 5.18 / 1.6 * math.pi / 180
+        self.angle_radian[4][0] = angle_tmp / (51200.0 / 360.0)  / 1.6 * math.pi / 180
         angle_tmp = self._6_link_angle - self.zero_6
         if abs(angle_tmp) < 5:
             angle_tmp = 0
@@ -1112,7 +1112,7 @@ class Can_transfer:
         处理并发送命令数据
         :param command_data: 包含命令的列表
         """
-        print(f"发送命令: {command_data}")
+        #print(f"发送命令: {command_data}")
         # 根据 command_data 设置对应电机的目标角度
         motor_id = command_data[0]  # 电机编号
         target_angle = command_data[2]  # 目标角度

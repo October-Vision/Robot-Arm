@@ -65,11 +65,11 @@ class KeyboardControl():
         if joint_id == 1:
             self.joint_1_key_data += self.step * direction
             self.can_.send_command([1, 0, self.joint_1_key_data])
-            print(f"控制1号电机，当前角度: {self.joint_1_key_data}")
+            #print(f"控制1号电机，当前角度: {self.joint_1_key_data}")
         elif joint_id == 2:
             self.joint_2_key_data += self.step * direction
             self.can_.send_command([2, 0, self.joint_2_key_data])
-            print(f"控制2号电机，当前角度: {self.joint_2_key_data}")
+            #print(f"控制2号电机，当前角度: {self.joint_2_key_data}")
         elif joint_id == 3:
             self.joint_3_key_data += self.step * direction
             self.can_.send_command([3, 0, self.joint_3_key_data])
@@ -77,6 +77,7 @@ class KeyboardControl():
             self.joint_4_key_data += self.step * direction
             self.can_.send_command([4, 0, self.joint_4_key_data])
         elif joint_id == 5:
+            self.step=5000
             self.joint_5_key_data += self.step * direction
             self.can_.send_command([5, 0, self.joint_5_key_data])
         elif joint_id == 6:
@@ -103,28 +104,28 @@ class KeyboardControl():
                 elif keyboard.is_pressed('e'):  # 控制3号电机增加
                     self.control_joint(3, 1)
                     time.sleep(0.2)
-                elif keyboard.is_pressed('r'):  # 控制3号电机减少
+                elif keyboard.is_pressed('q'):  # 控制3号电机减少
                     self.control_joint(3, -1)
                     time.sleep(0.2)
-                elif keyboard.is_pressed('t'):  # 控制4号电机增加
+                elif keyboard.is_pressed('l'):  # 控制4号电机增加
                     self.control_joint(4, 1)
                     time.sleep(0.2)
-                elif keyboard.is_pressed('y'):  # 控制4号电机减少
+                elif keyboard.is_pressed('j'):  # 控制4号电机减少
                     self.control_joint(4, -1)
                     time.sleep(0.2)
-                elif keyboard.is_pressed('u'):  # 控制5号电机增加
+                elif keyboard.is_pressed('k'):  # 控制5号电机增加
                     self.control_joint(5, 1)
                     time.sleep(0.2)
                 elif keyboard.is_pressed('i'):  # 控制5号电机减少
                     self.control_joint(5, -1)
                     time.sleep(0.2)
-                elif keyboard.is_pressed('o'):  # 控制6号电机增加
+                elif keyboard.is_pressed('t'):  # 控制6号电机增加
                     self.control_joint(6, 1)
                     time.sleep(0.2)
-                elif keyboard.is_pressed('p'):  # 控制6号电机减少
+                elif keyboard.is_pressed('r'):  # 控制6号电机减少
                     self.control_joint(6, -1)
                     time.sleep(0.2)
-                elif keyboard.is_pressed('q'):  # 退出
+                elif keyboard.is_pressed('esc'):  # 退出
                     print("退出键盘控制")
                     break
             except Exception as e:
